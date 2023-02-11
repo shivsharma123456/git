@@ -1,96 +1,51 @@
-var header = document.querySelector('#main-header');
-header.style.borderBottom= 'solid 4px #ccc';
-var input = document.querySelector('input');
-input.value = 'Hello World'
-var submit = document.querySelector('input[type="submit"]');
-submit.value="SEND" 
-var seconditem  = document.querySelector('.list-group-item:nth-child(2)');
-seconditem.style.color = 'green';
-// var lastItem = document.querySelector('.list-group-item:last-child');
-// lastItem.style.color = 'blue';
-var thirdItem = document.querySelector('.list-group-item:nth-child(3)'); 
-thirdItem.style.color = 'coral';
-// // QUERYSELECTORALL //
+var form = document.getElementById('addForm');
+var itemList = document.getElementById('items');
+var filter = document.getElementById('filter');
 
-// var titles= document.querySelectorAll('.title');
+// Form submit event
+form.addEventListener('submit', addItem);
+// Delete event
+itemList.addEventListener('click', removeItem);
+// Filter event
+filter.addEventListener('keyup', filterItems);
 
-// console.log(titles);
+// Add item
+function addItem(e){
+  e.preventDefault();
 
-// titles[0].textContent = 'Hello';
+  // Get input value
+  var newItem = document.getElementById('item').value;
 
-// var odd = document.querySelectorAll('li:nth-child(odd)'); 
-// var even= document.querySelectorAll('li:nth-child(even)');
+  // Create new li element
+  var li = document.createElement('li');
+  // Add class
+  li.className = 'list-group-item';
+  // Add text node with input value
+  li.appendChild(document.createTextNode(newItem));
 
-// for(var i = 0; i < odd.length; i++){ 
-// odd[i].style.backgroundColor = '#f4f4f4'; 
-// even[i].style.backgroundColor = '#ccc';
+  // Create del button element
+  var deleteBtn = document.createElement('button');
 
-// TRAVERSING THE DOM
-var itemList = document.querySelector('#items'); 
-// parentNode
-console.log(itemList.parentNode);
-itemList.parentNode.style.backgroundColor = '#f4f4f4'; 
-console.log(itemList.parentNode.parentNode.parentNode);
-// parentElement
-console.log(itemList.parentElement);
-itemList.parentElement.style.backgroundColor = '#f4f4f4'
-console.log(itemList.parentElement.parentElement.parentElement);
-// childNodes
-console.log(itemList.children);
-console.log(itemList.children[1]);
-itemList.children[1].style.backgroundColor = 'yellow';
-// Firstchild
-console.log(itemList.firstChild);
-// fristElementChild
-console.log(itemList.firstElementChild);
-itemList.firstElementChild.textContent = 'Hello 1';
+  // Add classes to del button
+  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
 
-// lastchild
-console.log(itemList.lastChild);
-// lastElementChild
-console.log(itemList.lastElementChild);
-itemList.lastElementChild.textContent = 'Hello 4';
+  // Append text node
+  deleteBtn.appendChild(document.createTextNode('X'));
 
-// nextSibling
-console.log(itemList.nextSibling);
+  // Append button to li
+  li.appendChild(deleteBtn);
 
-// nextElementSibling
-console.log(itemList.nextElementSibling);
+  // Append li to list
+  itemList.appendChild(li);
+}
 
-// previouSibling
-console.log(itemList.previousSibling);
-// previousElementSibling
-console.log(itemList.previousElementSibling);
-itemList.previousElementSibling.style.color = 'green';
-// createElement
-// Create a div
+// Remove item
+function removeItem(e){
+  if(e.target.classList.contains('delete')){
+    if(confirm('Are You Sure?')){
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
 
-var newDiv= document.createElement('div');
-
-// Add class
-
-newDiv.className= 'hello';
-
-// Add id
-
-newDiv.id = 'hello1';
-
-// Add attr
-
-newDiv.setAttribute('title', 'Hello Div');
-
-console.log(newDiv);
-// Create text node
-
-var newDivText = document.createTextNode('Hello World');
-
-// Add text to div newDiv.appendChild(newDivText);
-
-var container = document.querySelector('header .container'); 
-var h1 = document.querySelector('header h1');
-
-console.log(newDiv);
-
-newDiv.style.fontSize = '30px';
-
-container.insertBefore(newDiv, h1);
