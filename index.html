@@ -3,17 +3,17 @@
     <form onsubmit="saveToLocalStorage(event)">
       <label>Name:</label>
       <input type="text" name="username" required />
-      
+
       <label>Email:</label>
       <input type="email" name="emailId" required />
-      
+
       <label>Phone Number:</label>
       <input type="tel" name="phonenumber" />
 
       <button type="submit">Submit</button>
     </form>
 
-    <div id="user-details"></div>
+    <ul id="user-details"></ul>
 
     <script>
       function saveToLocalStorage(event) {
@@ -29,19 +29,39 @@
         const userDetails = {
           name: name,
           email: email,
-          phonenumber: phonenumber
+          phonenumber: phonenumber,
         };
 
-        localStorage.setItem('userDetails', JSON.stringify(userDetails));
+        localStorage.setItem(email, JSON.stringify(userDetails));
+        showUserOnScreen(userDetails);
+      }
 
-        const storedUserDetails = JSON.parse(localStorage.getItem('userDetails'));
+      function showUserOnScreen(userDetails) {
+        const parentElem = document.getElementById('user-details');
 
-        const userDetailsDiv = document.getElementById('user-details');
-        userDetailsDiv.innerHTML = `
-          <p>Name: ${storedUserDetails.name}</p>
-          <p>Email: ${storedUserDetails.email}</p>
-          <p>Phone Number: ${storedUserDetails.phonenumber}</p>
-        `;
+        const childElem = document.createElement('li');
+
+        childElem.textContent = userDetails.name + ' (' + userDetails.email  + ')' +  " " + userDetails.phonenumber;
+
+        const deleteButton = document.createElement('input');
+        deleteButton.type = 'button';
+        deleteButton.value = 'Delete';
+        deleteButton.onclick = () => {
+          localStorage.removeItem(userDetails.email);
+          parentElem.removeChild(childElem);
+        };
+
+        childElem.appendChild(deleteButton);
+        parentElem.appendChild(childElem);
+      }
+
+      
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key !== 'name' && key !== 'email' && key !== 'phonenumber') {
+          const userDetails = JSON.parse(localStorage.getItem(key));
+          showUserOnScreen(userDetails);
+        }
       }
     </script>
   </body>
