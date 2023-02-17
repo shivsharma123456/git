@@ -1,44 +1,48 @@
 <html>
+  <body>
+    <form onsubmit="saveToLocalStorage(event)">
+      <label>Name:</label>
+      <input type="text" name="username" required />
+      
+      <label>Email:</label>
+      <input type="email" name="emailId" required />
+      
+      <label>Phone Number:</label>
+      <input type="tel" name="phonenumber" />
 
-<body>
+      <button type="submit">Submit</button>
+    </form>
 
-  <form onsubmit="saveToLocalStorage (event)">
+    <div id="user-details"></div>
 
-    <label> Name</label>
+    <script>
+      function saveToLocalStorage(event) {
+        event.preventDefault();
+        const name = event.target.username.value;
+        const email = event.target.emailId.value;
+        const phonenumber = event.target.phonenumber.value;
 
-    <input type="text" name="username" required />
+        localStorage.setItem('name', name);
+        localStorage.setItem('email', email);
+        localStorage.setItem('phonenumber', phonenumber);
 
-    <label> EmailId</label>
+        const userDetails = {
+          name: name,
+          email: email,
+          phonenumber: phonenumber
+        };
 
-    <input type="email" name="emailId" required />
+        localStorage.setItem('userDetails', JSON.stringify(userDetails));
 
-    <label> Phone Number</label> <input type="tel" name="phonenumber" />
-    <button> Submit </button>
+        const storedUserDetails = JSON.parse(localStorage.getItem('userDetails'));
 
-  </form>
-
-  <script>
-
-    function saveToLocalStorage(event){ 
-    event.preventDefault();
-
-    const name = event.target.username.value; const email = event.target.emailId.value;
-
-    const phonenumber = event.target.phonenumber.value;
-
-    localStorage.setItem('name', name);
-
-    localStorage.setItem('email', email);
-
-    localStorage.setItem('phonenumber', phonenumber)
-      const obj = {
-        name,
-        email,
-        phonenumber,
+        const userDetailsDiv = document.getElementById('user-details');
+        userDetailsDiv.innerHTML = `
+          <p>Name: ${storedUserDetails.name}</p>
+          <p>Email: ${storedUserDetails.email}</p>
+          <p>Phone Number: ${storedUserDetails.phonenumber}</p>
+        `;
       }
-      localStorage.setItem('userDetails', JSON.stringify)}
-  </script>
-
-</body>
-
+    </script>
+  </body>
 </html>
