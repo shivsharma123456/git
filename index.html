@@ -31,7 +31,7 @@
           email: email,
           phonenumber: phonenumber,
         };
-        axios.post("https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData", obj )
+        axios.post("https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData", userDetails )
         .then((respone) => { 
           showNewUserOnScreen(respone.Data)
           // console.log(respone) 
