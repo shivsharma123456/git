@@ -15,6 +15,8 @@
       <label>Phone Number:</label>
       <input type="tel" name="phonenumber" />
 
+      <input type="hidden" name="userId" />
+
       <button type="submit">Submit</button>
     </form>
 
@@ -41,10 +43,7 @@
         const name = event.target.username.value;
         const email = event.target.emailId.value;
         const phonenumber = event.target.phonenumber.value;
-
-        localStorage.setItem('name', name);
-        localStorage.setItem('email', email);
-        localStorage.setItem('phonenumber', phonenumber);
+        const userId = event.target.userId.value;
 
         const userDetails = {
           name: name,
@@ -52,14 +51,27 @@
           phonenumber: phonenumber,
         };
 
-        axios
-          .post('https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData', userDetails)
-          .then((response) => {
-            showUserOnScreen(response.data);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        if (userId) {
+          axios
+            .put(`https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData/${userId}`, userDetails)
+            .then((response) => {
+              showUserOnScreen(response.data);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          axios
+            .post('https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData', userDetails)
+            .then((response) => {
+              showUserOnScreen(response.data);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+
+        event.target.reset();
       }
 
       function showUserOnScreen(userDetails) {
@@ -69,57 +81,41 @@
         childElem.textContent = `${userDetails.name} (${userDetails.email}) ${userDetails.phonenumber}`;
 
         const editButton = document.createElement('button');
-        editButton.textContent = 'Edit';
+        editButton.innerHTML = '&#x270E;';
         editButton.onclick = () => {
-          editUserDetails(userDetails);
+          populateFormWithUserDetails(userDetails);
         };
 
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.onclick = () => {
-          axios
-            .delete(
-              `https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData/${userDetails._id}`
-            )
-            .then(() => {
-              parentElem.removeChild(childElem);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        };
+    deleteButton.innerHTML = '&#x274C;';
+    deleteButton.onclick = () => {
+      deleteFromLocalStorage(userDetails._id, childElem);
+    };
 
-        childElem.appendChild(editButton);
-        childElem.appendChild(deleteButton);
-        parentElem.appendChild(childElem);
-      }
+    childElem.appendChild(editButton);
+    childElem.appendChild(deleteButton);
 
-      function editUserDetails(userDetails) {
-        const nameInput = prompt('Enter your name', userDetails.name);
-        const emailInput = prompt('Enter your email', userDetails.email);
-        const phoneInput = prompt('Enter your phone number', userDetails.phonenumber);
+    parentElem.appendChild(childElem);
+  }
 
-        const updatedUserDetails = {
-          name: nameInput,
-          email: emailInput,
-          phonenumber: phoneInput,
-        };
+  function populateFormWithUserDetails(userDetails) {
+    const form = document.querySelector('form');
+    form.userId.value = userDetails._id;
+    form.username.value = userDetails.name;
+    form.emailId.value = userDetails.email;
+    form.phonenumber.value = userDetails.phonenumber;
+  }
 
-        axios
-      .put(
-        `https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData/${userDetails._id}`,
-        updatedUserDetails
-      )
-      .then((response) => {
-        userDetails.name = response.data.name;
-        userDetails.email = response.data.email;
-        userDetails.phonenumber = response.data.phonenumber;
-        showUserOnScreen(userDetails);
+  function deleteFromLocalStorage(userId, childElem) {
+    axios
+      .delete(`https://crudcrud.com/api/52b4b3f9edb243ba9283dafdb2126553/appoinmentData/${userId}`)
+      .then(() => {
+        childElem.remove();
       })
       .catch((error) => {
         console.error(error);
       });
   }
 </script>
-  </body>
+</body>
 </html>
